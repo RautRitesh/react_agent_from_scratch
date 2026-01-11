@@ -12,7 +12,6 @@ A bare-metal implementation of the ReAct (Reasoning + Acting) pattern using Pyth
 > **"What if we stripped away the magic?"** > A bare-metal implementation of the **ReAct (Reasoning + Acting)** pattern. This project demonstrates how to build an autonomous AI agent from first principles using Python, Regex, and Groq's Llama 3, without relying on high-level agent abstractions.
 
 ---
-
 ## 🏗️ Architecture: The ReAct Loop
 
 How does the agent actually "think"? The diagram below illustrates the iterative cycle of Reasoning (`Thought`), Tool Use (`Action`), and Perception (`Observation`) implemented in this notebook.
@@ -22,18 +21,18 @@ graph TD
     Start([Start]) --> UserInput[/User Query/];
     
     subgraph "The ReAct Loop (Python Runtime)"
-        UserInput --> PrepareInput[Prepare Prompt + Conversation History];
-        PrepareInput --> CallLLM[Call LLM (Groq Llama-3)];
+        UserInput --> PrepareInput["Prepare Prompt + Conversation History"];
+        PrepareInput --> CallLLM["Call LLM (Groq Llama-3)"];
         
-        CallLLM -- LLM Generates "Thought" & "Action" --> CheckOutput{Script checks output via Regex: <br/> Is there an 'Action:'?};
+        CallLLM -- "LLM Generates Thought & Action" --> CheckOutput{"Script checks output via Regex: <br/> Is there an 'Action:'?"};
         
         %% NO ACTION LOOP
         CheckOutput -- "No (Final Answer)" --> ExtractAnswer[Extract Final Answer Text];
         
         %% YES ACTION LOOP
         CheckOutput -- "Yes (Found Action)" --> ParseAction[Parse Tool Name & Input];
-        ParseAction --> ExecuteTool[EXECUTE Tool <br/> (e.g., wikipedia, calculate)];
-        ExecuteTool --> GetObservation[/Generate "Observation"/];
+        ParseAction --> ExecuteTool["EXECUTE Tool <br/> (e.g., wikipedia, calculate)"];
+        ExecuteTool --> GetObservation[/"Generate Observation"/];
         GetObservation -- Append Observation to history --> PrepareInput;
     end
     
